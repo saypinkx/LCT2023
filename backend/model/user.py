@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON
+from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, text
 from api.dblink import db_session
 from . import user_sessions
 
@@ -59,13 +59,9 @@ class User(Base):
         db.commit()
         return new_user
 
-    def doLogin(self, jsonData):
+    @staticmethod
+    def do_login(usname, paword):
         sess = db_session()
-        try:
-            usname = jsonData['username']
-            paword = jsonData['password']
-        except KeyError:
-            return 'invalidFormat', ''
         # mdpass = md5(paword.encode('utf-8')).hexdigest()
         mdpass = paword
         our_user = sess.query(User).filter((User.username == usname) & (User.password == mdpass)).first()
@@ -73,7 +69,7 @@ class User(Base):
             return 'invalid', ''
 
         sess.flush()
-        sql = "delete from rs_sessions where user_id = :us_id"
+        sql = text("delete from lc_sessions where user_id = :us_id")
         db_session().execute(sql, {'us_id': our_user.id, })
 
         sess_uid = str(uuid.uuid4())
@@ -82,33 +78,34 @@ class User(Base):
         user_session.sess_id = sess_uid
         user_session.last_check = datetime.datetime.now()
         sess.add(user_session)
-        sess.flush()
+        sess.commit()
         return sess_uid, our_user.role
 
-    def doUnLogin(self):
+    @staticmethod
+    def un_login():
         m = IAPI.US
         s = db_session()
         s.delete(m)
-        s.flush()
+        s.commit()
 
-    def userCurrent(self):
-        m2 = self.userCurrObj()
-        return m2.dmp.dump(m2)
 
-    def userCurrObj(self):
+    @staticmethod
+    def current_user():
         sess = db_session()
         m = IAPI.US
         m2 = sess.query(User).filter((User.id == m.user_id)).first()
         return m2
 
-    def checkSession(self, token):
+
+    @staticmethod
+    def check_session(token):
         sess = db_session()
         user_session = sess.query(user_sessions.User_Sessions).filter_by(sess_id=token).first()
         if user_session:
             if user_session.last_check < datetime.datetime.now() - datetime.timedelta(days=5):
                 sql = "delete from lc_sessions where sess_id = :sess_id"
                 db_session().execute(sql, {'sess_id': user_session.sess_id, })
-                sess.flush()
+                sess.commit()
                 return None
             user_session.last_check = datetime.datetime.now()
             sess.flush()

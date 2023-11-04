@@ -17,7 +17,7 @@ def db_engine():
 class Db:
     def __init__(self):
         self.cstring = 'mysql+pymysql://admin_lct2023:1232023@185.221.152.242/admin_lct2023'
-        self.engine = create_engine(self.cstring)
+        self.engine = create_engine(self.cstring, echo=True)
         self.bdsession = sessionmaker(bind=self.engine, autoflush=False)()
         self.connect = self.engine.connect()
 

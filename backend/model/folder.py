@@ -2,7 +2,7 @@ from model.user import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, ForeignKey
 from api.dblink import db_session
-
+from model.material import Material
 
 class Folder(Base):
     __tablename__ = 'lc_mat_folder'
@@ -11,6 +11,7 @@ class Folder(Base):
     name = Column(String)
     descr = Column(String)
     parent = relationship('Folder', uselist=False, foreign_keys=parent_id, remote_side=[id])
+    materials = relationship('Material', uselist=True, back_populates='folder')
 
     def __init__(self, parent="", name="",
                  descr=""):
@@ -41,14 +42,8 @@ class Folder(Base):
     def update_record(folder_db, new_folder):
         db = db_session()
         folder_db: Folder
-        folder_db.name, folder_db.descr, folder_db.parent = new_folder.name, new_folder.descr, new_folder.parent
+        folder_db.name, folder_db.descr = new_folder.name, new_folder.descr
         db.add(folder_db)
         db.commit()
         return new_folder
 
-
-# db = db_session()
-# one = db.query(Folder).get(2)
-# print('lol')
-# folder = Folder(parent=one, name='name', descr='link')
-# Folder.add_record(folder)

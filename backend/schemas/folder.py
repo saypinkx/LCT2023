@@ -1,10 +1,15 @@
 from pydantic import BaseModel
 
 
-class FolderCreate:
+class FolderCreate(BaseModel):
     name: str
     descr: str
     parent_id: int
 
-    class Config:
-        orm_mode = True
+
+
+class FolderResponse(BaseModel):
+    id: int
+    name: str
+    descr: str
+    parent_id: int
