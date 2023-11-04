@@ -21,10 +21,12 @@ class User(Base):
 
 
     def __init__(self, username="", password="",
-                 security="", email=""):
+                 params="", email="", role=""):
         self.username = username
         self.password = password
         self.email = email
+        self.params = params
+        self.role = role
 
 
     def doLogin(self, jsonData):
@@ -90,6 +92,9 @@ class User(Base):
     def __repr__(self):
         return "<User_Registration('%s)>" \
                % (self.username)
+
+#################################################################################
+
 
 
 user = User()

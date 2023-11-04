@@ -1,19 +1,17 @@
 from fastapi import APIRouter, Body, Path
 from typing import Annotated
-from schemas.user import UserCreate
+from schemas.user import UserCreate, UserLogin
 from model.user import User
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from api.dblink import db_session
 
-router = APIRouter(prefix='api/v1/users')
+router = APIRouter(prefix='/api/users')
 
-
-@router.post('/create', status_code=201, response_model=UserCreate)
-def user_create(user: Annotated[UserCreate, Body()], db: Session = db_session()):
-    user_db = User(username=user.username, password=user.password, email=user.email, params=user.params, role=user.role,
-                   comp_id=user.comp_id)
+@router.post('/', status_code=201, response_model=UserCreate)
+def user_create(user: Annotated[UserCreate, Body()]):
+    user_db = User(username=user.username, password=user.password, email=user.email, params=user.params, role=user.role)
     db.add(user_db)
     db.commit()
     return user_db
@@ -54,3 +52,31 @@ def delete_user(user_id: Annotated[int, Path()], db: Session = db_session()):
     return user_db
 
 
+#============================================================================
+
+# @router.post('/login')
+# def login_user(user: Annotated[UserLogin, Body()]):
+#
+#     pass
+# class UserLogin(ResFree):
+#     def post(self):
+#         jsonData = request.get_json()
+#         loginResult, logRole = user.User().doLogin(jsonData)
+#         if loginResult == 'invalid':
+#             return make_response(jsonify({"error":"true", "message":"Wrong credentials"}), 401)
+#         if loginResult == 'invalidFormat':
+#             return make_response(jsonify({"error":"true", "message":"Invalid user name or password entry format"}), 401)
+#
+#         return make_response(jsonify(access_token=loginResult, user_role=logRole), 200)
+#
+#
+# class UserLogout(Resource):
+#     def get(self):
+#         user.User().doUnLogin()
+#         return make_response(jsonify({"message":"Successful"}), 202)
+#
+#
+# class UserCurrent(Resource):
+#     def get(self):
+#         q = user.User().userCurrent()
+#         return make_response(jsonify(q), 201)
