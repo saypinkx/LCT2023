@@ -9,13 +9,13 @@ router = APIRouter(prefix='/api/users')
 @router.post('/', status_code=201, response_model=UserCreate)
 def user_create(user: Annotated[UserCreate, Body()]):
     user_db = User(username=user.username, password=user.password, email=user.email, params=user.params, role=user.role)
-    User.addToBase(user_db)
+    User.add_record(user_db)
     return user_db
 
 
 @router.get('/{user_id}', response_model=None)
 def get_user(user_id: Annotated[int, Path()]):
-    user_db = User.get(user_id)
+    user_db = User.get_record(user_id)
     if not user_db:
         raise HTTPException(status_code=403, detail='User with id not found')
     return user_db
@@ -54,18 +54,18 @@ class UserCurrent(Resource):
 
 @router.put('/{user_id}', response_model=UserCreate)
 def update_user(user_id: Annotated[int, Path()], new_user: Annotated[UserCreate, Body()]):
-    user_db = User.get(user_id)
+    user_db = User.get_record(user_id)
     if not user_db:
         raise HTTPException(status_code=403, detail='User with id not found')
-    User.update(user_db, new_user)
+    User.update_record(user_db, new_user)
     return user_db
 
 
-@router.delete('/{user_id}', response_model=UserCreate)
-def delete_user(user_id: Annotated[int, Path()]):
-    user_db = User.get(user_id)
+@router.delete('/{user_id}')
+def delete_user(user_id: Annotated[int, Path()]) -> str:
+    user_db = User.get_record(user_id)
     if not user_db:
         raise HTTPException(detail='User with id not found', status_code=403)
-    User.delete(user_db)
-    return user_db
+    User.delete_record(user_db)
+    return 'OK'
 

@@ -27,25 +27,24 @@ class User(Base):
         self.role = role
 
     @staticmethod
-    def addToBase(obj):
+    def add_record(obj):
         dbs = db_session()
         dbs.add(obj)
         dbs.commit()
 
     @staticmethod
-    def delete(user_db):
+    def delete_record(user_db):
         db = db_session()
         db.delete(user_db)
         db.commit()
-        return user_db
 
     @staticmethod
-    def get(user_id):
+    def get_record(user_id):
         db = db_session()
         user_db = db.query(User).get(user_id)
         return user_db
     @staticmethod
-    def update(user_db, new_user):
+    def update_record(user_db, new_user):
         db = db_session()
         new_user_dict = new_user.dict()
         for key in new_user_dict:
