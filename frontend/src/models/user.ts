@@ -4,11 +4,3 @@ export interface UserInfo {
   username: string;
   role: string;
 }
-
-export interface UserFile {
-  date: string;
-  id?: string;
-  name: string;
-  result?: string;
-  size: number;
-}
