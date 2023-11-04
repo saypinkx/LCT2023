@@ -17,7 +17,7 @@ def user_create(user: Annotated[UserCreate, Body()]):
 def get_user(user_id: Annotated[int, Path()]):
     user_db = User.get(user_id)
     if not user_db:
-        raise HTTPException(status_code=401, detail='User with id not found')
+        raise HTTPException(status_code=403, detail='User with id not found')
     return user_db
 
 
@@ -68,3 +68,4 @@ def delete_user(user_id: Annotated[int, Path()]):
         raise HTTPException(detail='User with id not found', status_code=403)
     User.delete(user_db)
     return user_db
+

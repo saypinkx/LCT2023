@@ -32,18 +32,21 @@ class User(Base):
         dbs.add(obj)
         dbs.commit()
 
-    @classmethod
-    def delete(cls, user_db, db=db_session()):
+    @staticmethod
+    def delete(user_db):
+        db = db_session()
         db.delete(user_db)
         db.commit()
         return user_db
 
-    @classmethod
-    def get(cls, user_id, db=db_session()):
+    @staticmethod
+    def get(user_id):
+        db = db_session()
         user_db = db.query(User).get(user_id)
         return user_db
-    @classmethod
-    def update(cls, user_db, new_user, db=db_session()):
+    @staticmethod
+    def update(user_db, new_user):
+        db = db_session()
         new_user_dict = new_user.dict()
         for key in new_user_dict:
             if not new_user_dict[key]:
@@ -59,15 +62,6 @@ class User(Base):
 
 
 
-        #################################################################################
-
-    @staticmethod
-    def addToBase(obj):
-        dbs = db_session()
-        dbs.add(obj)
-        dbs.commit()
-
-#################################################################################
     def doLogin(self, jsonData):
         sess = db_session()
         try:
