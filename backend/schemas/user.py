@@ -8,3 +8,7 @@ class UserCreate(BaseModel):
     params: str
     role: str
     comp_id: int
+    class Config:
+        orm_mode = True
+
+
