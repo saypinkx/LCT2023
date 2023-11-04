@@ -43,6 +43,7 @@ class User(Base):
         db = db_session()
         user_db = db.query(User).get(user_id)
         return user_db
+
     @staticmethod
     def update_record(user_db, new_user):
         db = db_session()
@@ -50,16 +51,13 @@ class User(Base):
         for key in new_user_dict:
             if not new_user_dict[key]:
                 new_user_dict[key] = user_db.__dict__[key]
-        user_db.username, user_db.password, user_db.email, user_db.params, user_db.role, user_db.comp_id = \
-        new_user_dict[
-            'username'], new_user_dict[
-            'password'], new_user_dict['email'], new_user_dict['params'], new_user_dict['role'], new_user_dict[
-            'comp_id']
+        user_db.username, user_db.password, user_db.email, user_db.params, user_db.role = \
+            new_user_dict[
+                'username'], new_user_dict[
+                'password'], new_user_dict['email'], new_user_dict['params'], new_user_dict['role']
         db.add(user_db)
         db.commit()
         return new_user
-
-
 
     def doLogin(self, jsonData):
         sess = db_session()
