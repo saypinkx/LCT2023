@@ -23,33 +23,24 @@ def get_user(user_id: Annotated[int, Path()]):
 
 
 @router.post('/login')
-def login_user(user: Annotated[UserLogin, Body()]):
-    pass
+def login_user(c_user: Annotated[UserLogin, Body()]):
+    loginResult, logRole = User.do_login(c_user.username, c_user.password)
+    if loginResult == 'invalid':
+        raise HTTPException(status_code=401, detail='Wrong credentials')
+    return {"access_token": loginResult,
+            "user_role": logRole}
 
 
-# class UserLogin(ResFree):
-#     def post(self):
-#         jsonData = request.get_json()
-#         loginResult, logRole = user.User().doLogin(jsonData)
-#         if loginResult == 'invalid':
-#             return make_response(jsonify({"error": "true", "message": "Wrong credentials"}), 401)
-#         if loginResult == 'invalidFormat':
-#             return make_response(jsonify({"error": "true", "message": "Invalid user name or password entry format"}),
-#                                  401)
-#
-#         return make_response(jsonify(access_token=loginResult, user_role=logRole), 200)
-#
-#
-# class UserLogout(Resource):
-#     def get(self):
-#         user.User().doUnLogin()
-#         return make_response(jsonify({"message": "Successful"}), 202)
-#
-#
-# class UserCurrent(Resource):
-#     def get(self):
-#         q = user.User().userCurrent()
-#         return make_response(jsonify(q), 201)
+@router.get('/logout')
+def logout_user():
+    User.un_login()
+    return {"message": "Successful"}
+
+
+@router.get('/current')
+def current_user():
+    q = User.current_user()
+    return q
 
 
 @router.put('/{user_id}', response_model=UserCreate)
