@@ -8,7 +8,7 @@ app = FastAPI()
 
 app.include_router(students.router)
 
+
 @app.get('/proba')
 def proba_list():
-    return { 'pr': [1,2]}
-
+    return {'pr': [1, 2]}

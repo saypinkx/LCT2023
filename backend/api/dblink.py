@@ -5,11 +5,14 @@ from sqlalchemy import create_engine
 def db_connect():
     return Mydb.connect
 
+
 def db_session():
     return Mydb.bdsession
 
+
 def db_engine():
     return Mydb.engine
+
 
 class Db:
     def __init__(self):
@@ -18,9 +21,5 @@ class Db:
         self.bdsession = sessionmaker(bind=self.engine, autoflush=False)()
         self.connect = self.engine.connect()
 
+
 Mydb = Db()
-
-
-
-
-
