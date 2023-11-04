@@ -3,13 +3,14 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 import uvicorn
 
-from routers import students, users
+from routers import students, users, folders
 
 app = FastAPI()
 
 
 app.include_router(students.router)
 app.include_router(users.router)
+app.include_router(folders.router)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=7000)
