@@ -7,8 +7,9 @@ class UserCreate(BaseModel):
     email: str
     params: str
     role: str
-    comp_id: int
-    class Config:
-        orm_mode = True
 
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
