@@ -29,6 +29,13 @@ class User(Base):
         self.role = role
 
 
+    @staticmethod
+    def addToBase(obj):
+        dbs = db_session()
+        dbs.add(obj)
+        dbs.commit()
+
+#################################################################################
     def doLogin(self, jsonData):
         sess = db_session()
         try:
@@ -92,9 +99,6 @@ class User(Base):
     def __repr__(self):
         return "<User_Registration('%s)>" \
                % (self.username)
-
-#################################################################################
-
 
 
 user = User()
