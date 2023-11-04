@@ -61,6 +61,13 @@ class User(Base):
 
         #################################################################################
 
+    @staticmethod
+    def addToBase(obj):
+        dbs = db_session()
+        dbs.add(obj)
+        dbs.commit()
+
+#################################################################################
     def doLogin(self, jsonData):
         sess = db_session()
         try:

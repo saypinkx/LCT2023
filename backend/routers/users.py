@@ -1,10 +1,10 @@
+
 from fastapi import APIRouter, Body, Path, HTTPException
 from typing import Annotated
 from schemas.user import UserCreate, UserLogin
 from model.user import User
 
 router = APIRouter(prefix='/api/users')
-
 
 @router.post('/', status_code=201, response_model=UserCreate)
 def user_create(user: Annotated[UserCreate, Body()]):
