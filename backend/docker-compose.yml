@@ -5,12 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    network_mode: "host"
     command: uvicorn main:app --host 0.0.0.0 --port 5480 --workers 4
     environment:
       - PYTHONUNBUFFERED=1
     ports:
-      - '0.0.0.0:5480:5480'
+      - '0.0.0.0:5460:5460'
     expose:
-      - '5480'
+      - '5460'
 

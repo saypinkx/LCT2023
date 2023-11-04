@@ -27,22 +27,26 @@ async def modify_headers(request, call_next):
     uf = urlparse(str(request.url)).path.split('/')[-1]
     if (uf == ''):
         uf = urlparse(str(request.url)).path.split('/')[-2]
-    if uf in ('login', 'proba'):
-        return await call_next(request)
 
-    if "HTTP_AUTHORIZATION" not in request.headers:
-        return JSONResponse(status_code=401, content={'message': 'No authorization'})
 
-    re = request.headers['HTTP_AUTHORIZATION']
-    rw = re.split(' ')
-    if rw[0] != 'Bearer':
-        return JSONResponse(status_code=401, content={'message': 'No authorization'})
 
-    us = user.User.check_session(rw[1])
-    if us == None:
-        return JSONResponse(status_code=401, content={'message': 'No session'})
-    IAPI.US = us
+    if uf not in ('login', 'proba'):
+
+        if "HTTP_AUTHORIZATION" not in request.headers:
+            return JSONResponse(status_code=401, content={'message': 'No authorization'})
+
+        re = request.headers['HTTP_AUTHORIZATION']
+        rw = re.split(' ')
+        if rw[0] != 'Bearer':
+            return JSONResponse(status_code=401, content={'message': 'No authorization'})
+
+        us = user.User.check_session(rw[1])
+        if us == None:
+            return JSONResponse(status_code=401, content={'message': 'No session'})
+        IAPI.US = us
 
     response = await call_next(request)
-
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE,OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
