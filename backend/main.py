@@ -18,7 +18,7 @@ SAFELISTED_HEADERS = ["Accept", "Accept-Language", "Content-Language", "Content-
 middleware = [
     Middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=["http://localhost:8180"],
         allow_credentials=True,
         allow_methods=ALL_METHODS,
         allow_headers=SAFELISTED_HEADERS,
@@ -33,6 +33,7 @@ app.include_router(students.router)
 app.include_router(users.router)
 app.include_router(folders.router)
 app.include_router(materials.router)
+
 
 # if __name__ == "__main__":
 #     uvicorn.run(app, host="127.0.0.1", port=7000)
@@ -53,7 +54,6 @@ async def modify_headers(request, call_next):
 
         if "Authorization" not in request.headers:
             return JSONResponse(status_code=401, content={'message': 'No authorization'})
-
         re = request.headers['Authorization']
         rw = re.split(' ')
         if rw[0] != 'Bearer':
