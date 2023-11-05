@@ -3,13 +3,26 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 import uvicorn
 from urllib.parse import urlparse
-from fastapi.middleware.cors import CORSMiddleware
+
 from routers import students, users, folders
 from routers import students, users, materials
 from model import user
 from api.ini_api import IAPI
 
-app = FastAPI()
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
+
+middleware = [
+    Middleware(
+        CORSMiddleware,
+        allow_origins=['*'],
+        allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*']
+    )
+]
+
+app = FastAPI(middleware=middleware)
 
 app.include_router(students.router)
 app.include_router(users.router)
@@ -51,16 +64,3 @@ async def modify_headers(request, call_next):
     # response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE,OPTIONS'
     # response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
-
-
-
-
-origins = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
