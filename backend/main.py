@@ -12,13 +12,18 @@ from api.ini_api import IAPI
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
+ALL_METHODS = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+SAFELISTED_HEADERS = ["Accept", "Accept-Language", "Content-Language", "Content-Type", "HTTP_AUTHORIZATION"]
+
 middleware = [
     Middleware(
         CORSMiddleware,
-        allow_origins=['*'],
+        allow_origins=["*"],
         allow_credentials=True,
-        allow_methods=['*'],
-        allow_headers=['*']
+        allow_methods=ALL_METHODS,
+        allow_headers=SAFELISTED_HEADERS,
+        expose_headers=["*"]
+
     )
 ]
 
@@ -29,9 +34,9 @@ app.include_router(users.router)
 app.include_router(folders.router)
 app.include_router(materials.router)
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=7000)
-
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="127.0.0.1", port=7000)
+#
 
 @app.get('/proba')
 def proba_list():
