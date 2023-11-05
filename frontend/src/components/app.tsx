@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Container, Login, Upload } from '@src/components';
 import { useAuth } from '@src/hooks';
 
-export const App = (): JSX.Element => {
+export const App = (): React.ReactElement => {
   const { user } = useAuth();
   return user?.id && (
     <Routes>

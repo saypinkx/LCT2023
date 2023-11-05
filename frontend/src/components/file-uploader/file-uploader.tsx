@@ -33,7 +33,7 @@ export const FileUploader = ({
   onDrop,
   onSelect,
   types,
-}: Props): JSX.Element => {
+}: Props): React.ReactElement => {
   const accept = useMemo(() => `${(types ?? []).map(type => '.' + type)}`, [types]);
   const className = useMemo(() => `uploader-wrapper ${classes}${disabled ? ' is-disabled' : ''}`, [classes, disabled]);
   const inputRef = useRef<HTMLInputElement>(null);
