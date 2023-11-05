@@ -1,10 +1,12 @@
-
 from fastapi import APIRouter, Body, Path, HTTPException
-from typing import Annotated
+from typing import Annotated, Union
 from schemas.user import UserCreate, UserLogin
 from model.user import User
+from sqlalchemy import select
+from api.dblink import db_session
 
 router = APIRouter(prefix='/api/users')
+
 
 @router.post('/', status_code=201, response_model=UserCreate)
 def user_create(user: Annotated[UserCreate, Body()]):
@@ -19,7 +21,6 @@ def get_user(user_id: Annotated[int, Path()]):
     if not user_db:
         raise HTTPException(status_code=404, detail='User with id not found')
     return user_db
-
 
 
 @router.post('/login')
@@ -60,3 +61,10 @@ def delete_user(user_id: Annotated[int, Path()]) -> str:
     User.delete_record(user_db)
     return 'OK'
 
+
+@router.get('/')
+def get_all_users():
+    db = db_session()
+    smtp = select(User)
+    users_db = db.scalars(smtp).all()
+    return users_db

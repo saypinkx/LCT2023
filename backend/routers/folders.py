@@ -1,7 +1,12 @@
 from fastapi import APIRouter, Body, Path, HTTPException
-from typing import Annotated
+from typing import Annotated, Union
 from schemas.folder import FolderCreate, FolderResponse
+from schemas.material import MaterialResponse
 from model.folder import Folder
+from model.material import Material
+from api.dblink import db_session
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 router = APIRouter(prefix='/api/folders')
 
@@ -47,4 +52,38 @@ def update_folder(folder_id: Annotated[int, Path()], new_folder: Annotated[Folde
     Folder.update_record(folder_db, new_folder)
     return new_folder
 
+@router.get('/')
+def get_all_folders():
+    db = db_session()
+    smtp = select(Folder)
+    folders_db = db.scalars(smtp).all()
+    return folders_db
 
+@router.get('/{folder_id}/materials')
+def get_materials(folder_id: Annotated[int, Path()]) -> list[MaterialResponse]:
+    # materials = Folder.get_materials(folder_id)
+    # # if not materials:
+    # #     raise HTTPException(status_code=404, detail='Materials with folder_id not found')
+    # return materials
+    db = db_session()
+    smtp = select(Material).where(Material.folder_id == folder_id)
+    materials_db = db.scalars(smtp).all()
+    if not materials_db:
+        raise HTTPException(status_code=404, detail='materials with folder_id not found')
+    return materials_db
+
+
+@router.get('/{folder_id}/parent')
+def get_parent(folder_id: Annotated[int, Path()]) -> Union[FolderResponse, None]:
+    # parent_db = Folder.get_parent(folder_id)
+    # if not parent_db:
+    #     raise HTTPException(status_code=404, detail='folder with id not found')
+    # return parent_db
+
+    db = db_session()
+    smtp = select(Folder).options(joinedload(Folder.parent)).where(Folder.id == folder_id)
+    folder_db = db.scalars(smtp).first()
+    if not folder_db:
+        raise HTTPException(status_code=404, detail='folder with id not found')
+    parent_db = folder_db.parent
+    return parent_db

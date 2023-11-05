@@ -2,7 +2,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, text
 from api.dblink import db_session
 from . import user_sessions
-
 import datetime, uuid
 from api.ini_api import IAPI
 
@@ -59,6 +58,12 @@ class User(Base):
         db.commit()
         return new_user
 
+    # @staticmethod
+    # def get_all_records():
+    #     db = db_session()
+    #     users_db = db.query(User).all()
+    #     return users_db
+
     @staticmethod
     def do_login(usname, paword):
         sess = db_session()
@@ -88,14 +93,12 @@ class User(Base):
         s.delete(m)
         s.commit()
 
-
     @staticmethod
     def current_user():
         sess = db_session()
         m = IAPI.US
         m2 = sess.query(User).filter((User.id == m.user_id)).first()
         return m2
-
 
     @staticmethod
     def check_session(token):

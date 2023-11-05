@@ -2,7 +2,8 @@ from model.user import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, ForeignKey
 from api.dblink import db_session
-
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 
 class Material(Base):
@@ -37,6 +38,7 @@ class Material(Base):
         db.add(db_material)
         db.commit()
         return db_material
+
     @staticmethod
     def update_record(db_material, new_material):
         db = db_session()
@@ -45,5 +47,12 @@ class Material(Base):
         db.commit()
         return db_material
 
-
-
+    @staticmethod
+    def get_folder(material_id):
+        db = db_session()
+        smtp = select(Material).options(joinedload(Material.folder)).where(Material.id == material_id)
+        material_db = db.scalars(smtp).first()
+        # if not material_db:
+        #     raise ....
+        folder_db = material_db.folder
+        return folder_db

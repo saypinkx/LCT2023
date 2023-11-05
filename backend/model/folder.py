@@ -3,6 +3,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, ForeignKey
 from api.dblink import db_session
 from model.material import Material
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
+
 
 class Folder(Base):
     __tablename__ = 'lc_mat_folder'
@@ -47,3 +50,19 @@ class Folder(Base):
         db.commit()
         return new_folder
 
+    # @staticmethod
+    # def get_materials(folder_id: int):
+    #     db = db_session()
+    #     smtp = select(Material).where(Material.folder_id == folder_id)
+    #     materials_db = db.scalars(smtp).all()
+    #     return materials_db
+
+    # @staticmethod
+    # def get_parent(folder_id):
+    #     db = db_session()
+    #     smtp = select(Folder).options(joinedload(Folder.parent)).where(Folder.id == folder_id)
+    #     folder_db = db.scalars(smtp).first()
+    #     # if not folder_db:
+    #     #     raise ..
+    #     parent_db = folder_db.parent
+    #     return parent_db

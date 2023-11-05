@@ -3,6 +3,10 @@ from typing import Annotated
 from schemas.material import MaterialCreate, MaterialResponse
 from model.material import Material
 from model.folder import Folder
+from schemas.folder import FolderResponse
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
+from api.dblink import db_session
 
 router = APIRouter(prefix='/api/materials')
 
@@ -46,3 +50,21 @@ def delete_material(material_id: Annotated[int, Path()]) -> str:
         raise HTTPException(status_code=404, detail='material with id not found')
     Material.delete_record(material)
     return 'OK'
+
+@router.get('/')
+def get_all_materials():
+    db = db_session()
+    smtp = select(Material)
+    materials_db = db.scalars(smtp).all()
+    return materials_db
+
+
+@router.get('/{material_id}/folder', response_model=FolderResponse)
+def get_folder(material_id: Annotated[int, Path()]):
+    db = db_session()
+    smtp = select(Material).options(joinedload(Material.folder)).where(Material.id == material_id)
+    material_db = db.scalars(smtp).first()
+    if not material_db:
+        raise HTTPException(status_code=404, detail='material with id not found')
+    folder_db = material_db.folder
+    return folder_db
