@@ -3,14 +3,13 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 import uvicorn
 from urllib.parse import urlparse
-
+from fastapi.middleware.cors import CORSMiddleware
 from routers import students, users, folders
 from routers import students, users, materials
 from model import user
 from api.ini_api import IAPI
 
 app = FastAPI()
-
 
 app.include_router(students.router)
 app.include_router(users.router)
@@ -20,18 +19,17 @@ app.include_router(materials.router)
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=7000)
 
+
 @app.get('/proba')
 def proba_list():
     return {'pr': [1, 2]}
 
+
 @app.middleware("http")
 async def modify_headers(request, call_next):
-
     uf = urlparse(str(request.url)).path.split('/')[-1]
     if (uf == ''):
         uf = urlparse(str(request.url)).path.split('/')[-2]
-
-
 
     if uf not in ('login', 'proba'):
 
@@ -49,7 +47,20 @@ async def modify_headers(request, call_next):
         IAPI.US = us
 
     response = await call_next(request)
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE,OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    # response.headers['Access-Control-Allow-Origin'] = '*'
+    # response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE,OPTIONS'
+    # response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
+
+
+
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
