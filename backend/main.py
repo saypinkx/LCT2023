@@ -18,11 +18,11 @@ SAFELISTED_HEADERS = ["Accept", "Accept-Language", "Content-Language", "Content-
 middleware = [
     Middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:8180", "http://localhost"],
+        allow_origins=["*"],
         allow_credentials=True,
-        # allow_methods=ALL_METHODS,
-        # allow_headers=SAFELISTED_HEADERS,
-        # expose_headers=SAFELISTED_HEADERS,
+        allow_methods=ALL_METHODS,
+        allow_headers=SAFELISTED_HEADERS,
+        expose_headers=SAFELISTED_HEADERS,
 
     )
 ]
@@ -66,6 +66,6 @@ async def modify_headers(request, call_next):
 
     response = await call_next(request)
     # response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE,OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    # response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE,OPTIONS'
+    # response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     return response
