@@ -12,7 +12,7 @@ interface Context {
 
 const AuthContext = createContext({} as Context);
 
-export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element => {
+export const AuthProvider = ({ children }: React.PropsWithChildren): React.ReactElement => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<UserInfo>({} as UserInfo);

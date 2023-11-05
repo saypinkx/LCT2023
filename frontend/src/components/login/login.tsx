@@ -5,7 +5,7 @@ import { object, string } from 'yup';
 import { useAuth } from '@src/hooks';
 import './login.less';
 
-export const Login = (): JSX.Element => {
+export const Login = (): React.ReactElement => {
   const { error, onLogin } = useAuth();
   const { errors, handleBlur, handleChange, handleSubmit, isValid, touched, values } = useFormik({
     initialValues: {

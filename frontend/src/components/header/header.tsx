@@ -12,7 +12,7 @@ const menuItems = [
   { id: 'menu-item-logout', value: 'Выйти из системы' },
 ];
 
-export const Header = (): JSX.Element => {
+export const Header = (): React.ReactElement => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const navigate = useNavigate();
   const { pathname } = useLocation();

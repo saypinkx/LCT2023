@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Header } from '@src/components';
 import './container.less';
 
-export const Container = (): JSX.Element => {
+export const Container = (): React.ReactElement => {
   return (
     <>
       <Header />
