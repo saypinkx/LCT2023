@@ -13,7 +13,7 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 ALL_METHODS = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-SAFELISTED_HEADERS = ["Accept", "Accept-Language", "Content-Language", "Content-Type", "HTTP_AUTHORIZATION"]
+SAFELISTED_HEADERS = ["Accept", "Accept-Language", "Content-Language", "Content-Type", "Authorization"]
 
 middleware = [
     Middleware(
@@ -22,7 +22,7 @@ middleware = [
         allow_credentials=True,
         allow_methods=ALL_METHODS,
         allow_headers=SAFELISTED_HEADERS,
-        expose_headers=["*"]
+        expose_headers=SAFELISTED_HEADERS,
 
     )
 ]
@@ -51,10 +51,10 @@ async def modify_headers(request, call_next):
 
     if uf not in ('login', 'proba'):
 
-        if "HTTP_AUTHORIZATION" not in request.headers:
+        if "Authorization" not in request.headers:
             return JSONResponse(status_code=401, content={'message': 'No authorization'})
 
-        re = request.headers['HTTP_AUTHORIZATION']
+        re = request.headers['Authorization']
         rw = re.split(' ')
         if rw[0] != 'Bearer':
             return JSONResponse(status_code=401, content={'message': 'No authorization'})
