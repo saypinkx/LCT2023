@@ -10,30 +10,13 @@ const root = createRoot(document.getElementById('app'));
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#9c27b0',
-    },
-    info: {
-      main: '#e1e4f4',
-    },
-    error: {
-      main: '#ff1f55',
-    },
-    success: {
-      main: '#28a745',
-    },
-    warning: {
-      main: '#ffc107',
-    },
-    action: {
-      active: '#0000008a',
-    },
-  },
-  typography: {
-    fontFamily: '\'Montserrat\',sans-serif',
+    primary: { main: '#1976d2' },
+    secondary: { main: '#9c27b0' },
+    info: { main: '#e1e4f4' },
+    error: { main: '#ff1f55' },
+    success: { main: '#28a745' },
+    warning: { main: '#ffc107' },
+    action: { active: '#0000008a' },
   },
 });
 
