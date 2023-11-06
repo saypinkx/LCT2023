@@ -54,20 +54,12 @@ def update_folder(folder_id: Annotated[int, Path()], new_folder: Annotated[Folde
 
 @router.get('/')
 def get_all_folders():
-    db = db_session()
-    smtp = select(Folder)
-    folders_db = db.scalars(smtp).all()
+    folders_db = Folder.get_all_records()
     return folders_db
 
 @router.get('/{folder_id}/materials')
 def get_materials(folder_id: Annotated[int, Path()]) -> list[MaterialResponse]:
-    # materials = Folder.get_materials(folder_id)
-    # # if not materials:
-    # #     raise HTTPException(status_code=404, detail='Materials with folder_id not found')
-    # return materials
-    db = db_session()
-    smtp = select(Material).where(Material.folder_id == folder_id)
-    materials_db = db.scalars(smtp).all()
+    materials_db = Folder.get_materials(folder_id)
     if not materials_db:
         raise HTTPException(status_code=404, detail='materials with folder_id not found')
     return materials_db
@@ -75,14 +67,7 @@ def get_materials(folder_id: Annotated[int, Path()]) -> list[MaterialResponse]:
 
 @router.get('/{folder_id}/parent')
 def get_parent(folder_id: Annotated[int, Path()]) -> Union[FolderResponse, None]:
-    # parent_db = Folder.get_parent(folder_id)
-    # if not parent_db:
-    #     raise HTTPException(status_code=404, detail='folder with id not found')
-    # return parent_db
-
-    db = db_session()
-    smtp = select(Folder).options(joinedload(Folder.parent)).where(Folder.id == folder_id)
-    folder_db = db.scalars(smtp).first()
+    folder_db = Folder.get_record_join_parent(folder_id)
     if not folder_db:
         raise HTTPException(status_code=404, detail='folder with id not found')
     parent_db = folder_db.parent

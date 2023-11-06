@@ -48,11 +48,15 @@ class Material(Base):
         return db_material
 
     @staticmethod
-    def get_folder(material_id):
+    def get_record_join_folder(material_id):
         db = db_session()
         smtp = select(Material).options(joinedload(Material.folder)).where(Material.id == material_id)
         material_db = db.scalars(smtp).first()
-        # if not material_db:
-        #     raise ....
-        folder_db = material_db.folder
-        return folder_db
+        return material_db
+
+    @staticmethod
+    def get_all_records():
+        db = db_session()
+        smtp = select(Material)
+        materials_db = db.scalars(smtp).all()
+        return materials_db

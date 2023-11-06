@@ -50,19 +50,25 @@ class Folder(Base):
         db.commit()
         return new_folder
 
-    # @staticmethod
-    # def get_materials(folder_id: int):
-    #     db = db_session()
-    #     smtp = select(Material).where(Material.folder_id == folder_id)
-    #     materials_db = db.scalars(smtp).all()
-    #     return materials_db
+    @staticmethod
+    def get_materials(folder_id: int):
+        db = db_session()
+        smtp = select(Material).where(Material.folder_id == folder_id)
+        materials_db = db.scalars(smtp).all()
+        return materials_db
 
-    # @staticmethod
-    # def get_parent(folder_id):
-    #     db = db_session()
-    #     smtp = select(Folder).options(joinedload(Folder.parent)).where(Folder.id == folder_id)
-    #     folder_db = db.scalars(smtp).first()
-    #     # if not folder_db:
-    #     #     raise ..
-    #     parent_db = folder_db.parent
-    #     return parent_db
+    @staticmethod
+    def get_record_join_parent(folder_id):
+        db = db_session()
+        smtp = select(Folder).options(joinedload(Folder.parent)).where(Folder.id == folder_id)
+        folder_db = db.scalars(smtp).first()
+        return folder_db
+
+    @staticmethod
+    def get_all_records():
+        db = db_session()
+        smtp = select(Folder)
+        folders_db = db.scalars(smtp).all()
+        return folders_db
+
+

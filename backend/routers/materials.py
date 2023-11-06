@@ -51,19 +51,16 @@ def delete_material(material_id: Annotated[int, Path()]) -> str:
     Material.delete_record(material)
     return 'OK'
 
+
 @router.get('/')
 def get_all_materials():
-    db = db_session()
-    smtp = select(Material)
-    materials_db = db.scalars(smtp).all()
+    materials_db = Material.get_all_records()
     return materials_db
 
 
 @router.get('/{material_id}/folder', response_model=FolderResponse)
 def get_folder(material_id: Annotated[int, Path()]):
-    db = db_session()
-    smtp = select(Material).options(joinedload(Material.folder)).where(Material.id == material_id)
-    material_db = db.scalars(smtp).first()
+    material_db = Material.get_record_join_folder(material_id)
     if not material_db:
         raise HTTPException(status_code=404, detail='material with id not found')
     folder_db = material_db.folder
