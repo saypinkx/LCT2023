@@ -4,6 +4,7 @@ from api.dblink import db_session
 from . import user_sessions
 import datetime, uuid
 from api.ini_api import IAPI
+from sqlalchemy import select
 
 Base = declarative_base()
 
@@ -58,11 +59,17 @@ class User(Base):
         db.commit()
         return new_user
 
-    # @staticmethod
-    # def get_all_records():
-    #     db = db_session()
-    #     users_db = db.query(User).all()
-    #     return users_db
+    @staticmethod
+    def get_all_records():
+        db = db_session()
+        users_db = db.query(User).all()
+        return users_db
+
+    @staticmethod
+    def is_have(user_id):
+        db = db_session()
+        smtp = select(User.id).where(User.id == user_id)
+        return db.scalar(smtp)
 
     @staticmethod
     def do_login(usname, paword):

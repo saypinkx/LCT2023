@@ -4,8 +4,8 @@ from fastapi.responses import JSONResponse
 import uvicorn
 from urllib.parse import urlparse
 
-from routers import students, users, folders
-from routers import students, users, materials
+
+from routers import students, users, materials, folders, messages
 from model import user
 from api.ini_api import IAPI
 
@@ -33,6 +33,7 @@ app = FastAPI(middleware=middleware)
 app.include_router(users.router)
 app.include_router(folders.router)
 app.include_router(materials.router)
+app.include_router(messages.router)
 
 
 if __name__ == "__main__":

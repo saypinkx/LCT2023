@@ -64,7 +64,5 @@ def delete_user(user_id: Annotated[int, Path()]) -> str:
 
 @router.get('/')
 def get_all_users():
-    db = db_session()
-    smtp = select(User)
-    users_db = db.scalars(smtp).all()
+    users_db = User.get_all_records()
     return users_db
