@@ -1,13 +1,13 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import { gridProperties } from '@src/utils';
-import './upload.less';
+import './messages.less';
 
-export const Upload = (): React.ReactElement => {
+export const Messages = (): React.ReactElement => {
   return (
     <Grid container item { ...gridProperties }>
-      <p className="uploader-description">
-        Загрузите Excel
+      <p>
+        Сообщения
       </p>
     </Grid>
   );

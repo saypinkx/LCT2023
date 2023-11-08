@@ -1,61 +1,29 @@
-import React, { MouseEvent, useState } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MoreVert } from '@mui/icons-material';
-import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Button, Typography } from '@mui/material';
 import { useAuth } from '@src/hooks';
 import './header.less';
 
-const menuItems = [
-  { id: 'menu-item-upload', value: 'Загрузка' },
-  { id: 'menu-item-logout', value: 'Выйти из системы' },
-];
-
 export const Header = (): React.ReactElement => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { onLogout, user } = useAuth();
 
-  const handleClickMenu = (event: MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
-
-  const handleCloseMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(null);
-    if (event.currentTarget.id === 'menu-item-upload' && pathname !== '/upload') {
-      navigate('/upload');
-    } else if (event.currentTarget.id === 'menu-item-logout') {
-      onLogout();
-    }
+  const handleClick = (path: string) => {
+    if (path !== pathname) navigate(path);
   };
 
   return (
     <header className="app-header">
-      <div className="app-header__logo"></div>
+      <Button onClick={() => handleClick('/main')}>Главная</Button>
+      <Button onClick={() => handleClick('/profile')}>Профиль</Button>
+      <Button onClick={() => handleClick('/materials')}>Материалы</Button>
+      <Button onClick={() => handleClick('/messages')}>Сообщения</Button>
       <Typography variant="body1" component="div" sx={{ flexGrow: 1, textAlign: 'right' }}>
         {user.username}
       </Typography>
-      <IconButton
-        aria-label="more"
-        id="long-button"
-        aria-controls="long-menu"
-        aria-expanded={!!anchorEl}
-        aria-haspopup="true"
-        onClick={handleClickMenu}
-      >
-        <MoreVert/>
-      </IconButton>
-      <Menu
-        id="long-menu"
-        MenuListProps={{ 'aria-labelledby': 'long-button' }}
-        anchorEl={anchorEl}
-        open={!!anchorEl}
-        onClose={handleCloseMenu}
-      >
-        {menuItems.map(option => (
-          <MenuItem id={option.id} key={option.id} onClick={handleCloseMenu}>
-            {option.value}
-          </MenuItem>
-        ))}
-      </Menu>
+      <Button color="secondary" startIcon={<LogoutIcon />} onClick={() => onLogout()}>Выход</Button>
     </header>
   )
 }
