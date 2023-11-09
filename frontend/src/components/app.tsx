@@ -13,8 +13,8 @@ export const App = (): React.ReactElement => {
         <Route path='/messages' element={<Messages />} />
         <Route path='/profile' element={<Profile />} />
       </Route>
-      <Route path='/login' element={user.id > -1 ? <Navigate to='/upload' replace /> : <Login />} />
-      <Route path='*' element={<Navigate to={user.id > -1 ? '/upload' : '/login'} replace />} />
+      <Route path='/login' element={user.id > -1 ? <Navigate to='/main' replace /> : <Login />} />
+      <Route path='*' element={<Navigate to={user.id > -1 ? '/main' : '/login'} replace />} />
     </Routes>
   );
 };

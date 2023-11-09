@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): React.React
       await login(credentials);
       setUser(await currentUser());
       setError('');
-      navigate('/upload', { replace: true });
+      navigate('/main', { replace: true });
     } catch(e) {
       setError(e?.message || 'Произошла неизвестная ошибка');
     }
@@ -52,6 +52,4 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): React.React
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
