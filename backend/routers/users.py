@@ -1,25 +1,26 @@
-
 from fastapi import APIRouter, Body, Path, HTTPException
-from typing import Annotated
+from typing import Annotated, Union
 from schemas.user import UserCreate, UserLogin
 from model.user import User
+from sqlalchemy import select
+from api.dblink import db_session
 
 router = APIRouter(prefix='/api/users')
 
-@router.post('/', status_code=201, response_model=UserCreate)
+
+@router.post('/us/', status_code=201, response_model=UserCreate)
 def user_create(user: Annotated[UserCreate, Body()]):
     user_db = User(username=user.username, password=user.password, email=user.email, params=user.params, role=user.role)
     User.add_record(user_db)
     return user_db
 
 
-@router.get('/{user_id}', response_model=None)
+@router.get('/us/{user_id}', response_model=None)
 def get_user(user_id: Annotated[int, Path()]):
     user_db = User.get_record(user_id)
     if not user_db:
         raise HTTPException(status_code=404, detail='User with id not found')
     return user_db
-
 
 
 @router.post('/login')
@@ -43,7 +44,7 @@ def current_user():
     return q
 
 
-@router.put('/{user_id}', response_model=UserCreate)
+@router.put('/us/{user_id}', response_model=UserCreate)
 def update_user(user_id: Annotated[int, Path()], new_user: Annotated[UserCreate, Body()]):
     user_db = User.get_record(user_id)
     if not user_db:
@@ -52,7 +53,7 @@ def update_user(user_id: Annotated[int, Path()], new_user: Annotated[UserCreate,
     return user_db
 
 
-@router.delete('/{user_id}')
+@router.delete('/us/{user_id}')
 def delete_user(user_id: Annotated[int, Path()]) -> str:
     user_db = User.get_record(user_id)
     if not user_db:
@@ -60,3 +61,10 @@ def delete_user(user_id: Annotated[int, Path()]) -> str:
     User.delete_record(user_db)
     return 'OK'
 
+
+@router.get('/us/')
+def get_all_users():
+    db = db_session()
+    smtp = select(User)
+    users_db = db.scalars(smtp).all()
+    return users_db

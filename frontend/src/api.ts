@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Credentials, LoginInfo, LogoutInfo, UserInfo } from '@src/models';
+import { Credentials, UserInfo } from '@src/models';
 
 type ApiError = { error: boolean; message: string; };
 
@@ -21,9 +21,9 @@ export async function currentUser(): Promise<UserInfo> {
   }
 }
 
-export async function login(credentials: Credentials): Promise<LoginInfo> {
+export async function login(credentials: Credentials): Promise<unknown> {
   try {
-    const { data } = await api.post<LoginInfo>('/users/login', credentials);
+    const { data } = await api.post<{ access_token: string; }>('/users/login', credentials);
     Cookies.set('Authorization', data.access_token, { expires: 1 });
     if (data.access_token && api.defaults.headers.common) api.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
     return data;
@@ -32,9 +32,9 @@ export async function login(credentials: Credentials): Promise<LoginInfo> {
   }
 }
 
-export async function logout(): Promise<LogoutInfo> {
+export async function logout(): Promise<{ message: string; }> {
   try {
-    const { data } = await api.get<LogoutInfo>('/users/logout');
+    const { data } = await api.get<{ message: string; }>('/users/logout');
     Cookies.remove('Authorization');
     delete api.defaults.headers.common['Authorization'];
     return data;

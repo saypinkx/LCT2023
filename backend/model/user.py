@@ -2,7 +2,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, TIMESTAMP, JSON, text
 from api.dblink import db_session
 from . import user_sessions
-
 import datetime, uuid
 from api.ini_api import IAPI
 
@@ -59,6 +58,12 @@ class User(Base):
         db.commit()
         return new_user
 
+    # @staticmethod
+    # def get_all_records():
+    #     db = db_session()
+    #     users_db = db.query(User).all()
+    #     return users_db
+
     @staticmethod
     def do_login(usname, paword):
         sess = db_session()
@@ -88,7 +93,6 @@ class User(Base):
         s.delete(m)
         s.commit()
 
-
     @staticmethod
     def current_user():
         sess = db_session()
@@ -96,19 +100,19 @@ class User(Base):
         m2 = sess.query(User).filter((User.id == m.user_id)).first()
         return m2
 
-
     @staticmethod
     def check_session(token):
         sess = db_session()
         user_session = sess.query(user_sessions.User_Sessions).filter_by(sess_id=token).first()
         if user_session:
+
             if user_session.last_check < datetime.datetime.now() - datetime.timedelta(days=5):
-                sql = "delete from lc_sessions where sess_id = :sess_id"
-                db_session().execute(sql, {'sess_id': user_session.sess_id, })
+                sql = text("delete from lc_sessions where sess_id = :sess_id")
+                sess.execute(sql, {'sess_id': user_session.sess_id, })
                 sess.commit()
                 return None
             user_session.last_check = datetime.datetime.now()
-            sess.flush()
+            sess.commit()
             return user_session
         return None
 
