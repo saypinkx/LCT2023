@@ -36,7 +36,7 @@ async def modify_headers(request, call_next):
 
     if uf not in ('login', 'proba'):
 
-        if "authorization" not in request.headers:
+        if "Authorization" not in request.headers:
             return JSONResponse(status_code=401, content={'message': 'No authorization'})
         re = request.headers['Authorization']
         rw = re.split(' ')
