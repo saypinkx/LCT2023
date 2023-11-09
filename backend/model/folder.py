@@ -45,7 +45,10 @@ class Folder(Base):
     def update_record(folder_db, new_folder):
         db = db_session()
         folder_db: Folder
-        folder_db.name, folder_db.descr = new_folder.name, new_folder.descr
+        if new_folder.descr is not None:
+            folder_db.descr = new_folder.descr
+        if new_folder.name is not None:
+            folder_db.name = new_folder.name
         db.add(folder_db)
         db.commit()
         return new_folder

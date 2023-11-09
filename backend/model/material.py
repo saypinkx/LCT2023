@@ -42,7 +42,11 @@ class Material(Base):
     @staticmethod
     def update_record(db_material, new_material):
         db = db_session()
-        db_material.link, db_material.name = new_material.link, new_material.name
+        if new_material.link is not None:
+            db_material.link = new_material.link
+
+        if new_material.name is not None:
+            db_material.name = new_material.name
         db.add(db_material)
         db.commit()
         return db_material

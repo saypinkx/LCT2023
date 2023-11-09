@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Path, HTTPException
 from typing import Annotated
-from schemas.material import MaterialCreate, MaterialResponse
+from schemas.material import MaterialCreate, MaterialResponse, MaterialUpdate
 from model.material import Material
 from model.folder import Folder
 from schemas.folder import FolderResponse
@@ -29,16 +29,17 @@ def create_material(material: Annotated[MaterialCreate, Body()]):
     return material
 
 
-@router.put('/{material_id}', response_model=MaterialCreate)
-def update_material(material_id: Annotated[int, Path()], new_material: Annotated[MaterialCreate, Body()]):
+@router.put('/{material_id}', response_model=MaterialUpdate)
+def update_material(material_id: Annotated[int, Path()], new_material: Annotated[MaterialUpdate, Body()]):
     material_db = Material.get_record(material_id)
     if not material_db:
         raise HTTPException(status_code=404, detail='material with id not found')
-    if new_material.folder_id != material_db.folder_id:
-        folder_db = Folder.get_record(new_material.folder_id)
-        if not folder_db:
-            raise HTTPException(status_code=404, detail='folder with id not found')
-        material_db.folder = folder_db
+    if new_material.folder_id is not None:
+        if new_material.folder_id != material_db.folder_id:
+            folder_db = Folder.get_record(new_material.folder_id)
+            if not folder_db:
+                raise HTTPException(status_code=404, detail='folder with id not found')
+            material_db.folder = folder_db
     Material.update_record(material_db, new_material)
     return new_material
 

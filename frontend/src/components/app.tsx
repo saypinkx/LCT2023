@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Container, Login, Upload } from '@src/components';
+import { Container, Login, Main, Materials, Messages, Profile } from '@src/components';
 import { useAuth } from '@src/hooks';
 
 export const App = (): React.ReactElement => {
@@ -8,7 +8,10 @@ export const App = (): React.ReactElement => {
   return user?.id && (
     <Routes>
       <Route element={user.id > -1 ? <Container /> : <Navigate to='/login' replace /> }>
-        <Route path='/upload' element={<Upload />} />
+        <Route path='/main' element={<Main />} />
+        <Route path='/materials' element={<Materials />} />
+        <Route path='/messages' element={<Messages />} />
+        <Route path='/profile' element={<Profile />} />
       </Route>
       <Route path='/login' element={user.id > -1 ? <Navigate to='/upload' replace /> : <Login />} />
       <Route path='*' element={<Navigate to={user.id > -1 ? '/upload' : '/login'} replace />} />

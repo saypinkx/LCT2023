@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body, Path, HTTPException
 from typing import Annotated, Union
-from schemas.folder import FolderCreate, FolderResponse
+from schemas.folder import FolderCreate, FolderResponse, FolderUpdate
 from schemas.material import MaterialResponse
 from model.folder import Folder
 from model.material import Material
@@ -39,16 +39,17 @@ def create_folder(folder: Annotated[FolderCreate, Body()]):
 
 
 #
-@router.put('/{folder_id}', response_model=FolderCreate)
-def update_folder(folder_id: Annotated[int, Path()], new_folder: Annotated[FolderCreate, Body()]):
+@router.put('/{folder_id}', response_model=FolderUpdate)
+def update_folder(folder_id: Annotated[int, Path()], new_folder: Annotated[FolderUpdate, Body()]):
     folder_db = Folder.get_record(folder_id)
     if not folder_db:
         raise HTTPException(status_code=404, detail='folder with id not found')
-    if new_folder.parent_id != folder_db.parent_id:
-        parent = Folder.get_record(new_folder.parent_id)
-        if not parent:
-            raise HTTPException(status_code=404, detail='parent with  id not found')
-        folder_db.parent = parent
+    if new_folder.parent_id is not None:
+        if new_folder.parent_id != folder_db.parent_id:
+            parent = Folder.get_record(new_folder.parent_id)
+            if not parent:
+                raise HTTPException(status_code=404, detail='parent with  id not found')
+            folder_db.parent = parent
     Folder.update_record(folder_db, new_folder)
     return new_folder
 
