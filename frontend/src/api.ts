@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Credentials, UserInfo } from '@src/models';
+import { Credentials, FolderResp, MaterialResp, UserInfo } from '@src/models';
 
 type ApiError = { error: boolean; message: string; };
 
@@ -37,6 +37,24 @@ export async function logout(): Promise<{ message: string; }> {
     const { data } = await api.get<{ message: string; }>('/users/logout');
     Cookies.remove('Authorization');
     delete api.defaults.headers.common['Authorization'];
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getFolders(): Promise<FolderResp[]> {
+  try {
+    const { data } = await api.get('/folders');
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getMaterials(): Promise<MaterialResp[]> {
+  try {
+    const { data } = await api.get('/materials');
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
