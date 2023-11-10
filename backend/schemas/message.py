@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 from datetime import datetime
-
+from typing import Optional
 
 class MessageCreate(BaseModel):
     from_id: int
     to_id: int
-    after_id: None | int = None
+    after_id: Optional[int] = None
     topic: str
     date: datetime = datetime.utcnow()
     body: str
@@ -14,7 +14,7 @@ class MessageCreate(BaseModel):
 
 
 class MessageUpdate(BaseModel):
-    topic: str | None = None
-    body: str | None = None
+    topic: Optional[str] = None
+    body: Optional[str] = None
     is_completed: int = 0
     is_read: int = 0

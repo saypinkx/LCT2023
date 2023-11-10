@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 from routers import students, users, materials, folders, messages
 from model import user
 from api.ini_api import IAPI
+from api.dblink import db_session
 
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
@@ -48,10 +49,16 @@ async def modify_headers(request, call_next):
             return JSONResponse(status_code=401, content={'message': 'No session'})
         IAPI.US = us
 
-    response = await call_next(request)
-    # response.headers['Access-Control-Allow-Origin'] = '*'
-    # response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE,OPTIONS'
-    # response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    sess = db_session()
+    response = None
+    try:
+        response = await call_next(request)
+        sess.commit()
+    except:
+        sess.rollback()
+    finally:
+        sess.close()
+
     return response
 
 app.add_middleware(
