@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Credentials, FolderResp, MaterialResp, UserInfo } from '@src/models';
+import { Credentials, Folder, Material, UserInfo } from '@src/models';
 
 type ApiError = { error: boolean; message: string; };
 
@@ -43,7 +43,7 @@ export async function logout(): Promise<{ message: string; }> {
   }
 }
 
-export async function getFolders(): Promise<FolderResp[]> {
+export async function getFolders(): Promise<Folder[]> {
   try {
     const { data } = await api.get('/folders');
     return data;
@@ -52,9 +52,36 @@ export async function getFolders(): Promise<FolderResp[]> {
   }
 }
 
-export async function getMaterials(): Promise<MaterialResp[]> {
+export async function deleteMaterial(id: number): Promise<any> {
+  try {
+    const { data } = await api.delete(`/materials/${id}`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getMaterials(): Promise<Omit<Material, 'folder_name'>[]> {
   try {
     const { data } = await api.get('/materials');
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function postMaterial(body: unknown): Promise<any> {
+  try {
+    const { data } = await api.post('/materials', body);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function putMaterial(id: number, body: unknown): Promise<any> {
+  try {
+    const { data } = await api.put(`/materials/${id}`, body);
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);

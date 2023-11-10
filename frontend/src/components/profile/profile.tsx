@@ -1,14 +1,14 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { gridProperties } from '@src/utils';
 import './profile.less';
 
 export const Profile = (): React.ReactElement => {
   return (
     <Grid container item { ...gridProperties }>
-      <p>
+      <Typography component="h1" variant="h5">
         Профиль
-      </p>
+      </Typography>
     </Grid>
   );
 };
