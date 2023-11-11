@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import Optional
 
 class FolderCreate(BaseModel):
     name: str
@@ -15,6 +15,6 @@ class FolderResponse(BaseModel):
 
 
 class FolderUpdate(BaseModel):
-    name: str | None = None
-    descr: str | None = None
-    parent_id: int | None = None
+    name: Optional[str] = None
+    descr: Optional[str] = None
+    parent_id: Optional[int] = None

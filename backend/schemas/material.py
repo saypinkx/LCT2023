@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class MaterialCreate(BaseModel):
@@ -15,6 +16,7 @@ class MaterialResponse(BaseModel):
 
 
 class MaterialUpdate(BaseModel):
-    folder_id: int | None = None
-    name: str | None = None
-    link: str | None = None
+    folder_id: Optional[int] = None
+    name: Optional[str] = None
+    link: Optional[str] = None
+
