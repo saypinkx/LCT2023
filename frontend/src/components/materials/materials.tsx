@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { Delete, Edit } from '@mui/icons-material';
 import { Button, ButtonGroup, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { deleteMaterial, getFolders, getMaterials } from '@src/api';
@@ -9,10 +9,10 @@ import { gridProperties } from '@src/utils';
 
 export const Materials = (): React.ReactElement => {
   const { user } = useAuth();
-  const [item, setItem] = useState<Material | null | undefined>();
-  const [folders, setFolders] = useState<Folder[]>([]);
-  const [materials, setMaterials] = useState<Material[]>([]);
-  const isHr = useMemo(() => user.role === 'hr', [user]);
+  const [item, setItem] = React.useState<Material | null | undefined>();
+  const [folders, setFolders] = React.useState<Folder[]>([]);
+  const [materials, setMaterials] = React.useState<Material[]>([]);
+  const isHr = React.useMemo(() => user.role === 'hr', [user]);
 
   const onDelete = (id: number): void => {
     deleteMaterial(id)
@@ -41,7 +41,7 @@ export const Materials = (): React.ReactElement => {
       .catch(console.log);
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     update();
   }, []);
 

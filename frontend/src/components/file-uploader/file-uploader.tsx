@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import { useDragging } from '@src/hooks';
 import { pluralRus } from '@src/utils';
 import './file-uploader.less';
@@ -34,15 +34,15 @@ export const FileUploader = ({
   onSelect,
   types,
 }: Props): React.ReactElement => {
-  const accept = useMemo(() => `${(types ?? []).map(type => '.' + type)}`, [types]);
-  const className = useMemo(() => `uploader-wrapper ${classes}${disabled ? ' is-disabled' : ''}`, [classes, disabled]);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const labelRef = useRef<HTMLLabelElement>(null);
+  const accept = React.useMemo(() => `${(types ?? []).map(type => '.' + type)}`, [types]);
+  const className = React.useMemo(() => `uploader-wrapper ${classes}${disabled ? ' is-disabled' : ''}`, [classes, disabled]);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const labelRef = React.useRef<HTMLLabelElement>(null);
   const dragging = useDragging({ handleChange, inputRef, labelRef, maxCount, onDrop });
-  const multiple = useMemo(() => maxCount > 1, [maxCount]);
-  const [currentFiles, setFiles] = useState<File[]>([]);
-  const [error, setError] = useState<string>('');
-  const [uploaded, setUploaded] = useState<boolean>(false);
+  const multiple = React.useMemo(() => maxCount > 1, [maxCount]);
+  const [currentFiles, setFiles] = React.useState<File[]>([]);
+  const [error, setError] = React.useState<string>('');
+  const [uploaded, setUploaded] = React.useState<boolean>(false);
 
   const invalidFile = (file: File) => {
     const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
@@ -88,15 +88,15 @@ export const FileUploader = ({
     if (onSelect && success) onSelect(files);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     onDraggingStateChange?.(dragging);
   }, [dragging]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setError(externalError);
   }, [externalError]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (files) {
       setFiles(files);
       setUploaded(true);

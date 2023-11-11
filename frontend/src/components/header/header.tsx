@@ -10,7 +10,7 @@ export const Header = (): React.ReactElement => {
   const { pathname } = useLocation();
   const { onLogout, user } = useAuth();
 
-  const handleClick = (path: string) => {
+  const handleClick = (path: string): void => {
     if (path !== pathname) navigate(path);
   };
 

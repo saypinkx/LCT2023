@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, CardContent, Grid, Tab, Tabs, Typography } from '@mui/material';
 import { getMessages } from '@src/api';
 import { useAuth } from '@src/hooks';
@@ -7,11 +7,11 @@ import { gridProperties } from '@src/utils';
 
 export const Messages = (): React.ReactElement => {
   const { user } = useAuth();
-  const [incoming, setIncoming] = useState<Message[] | null>(null);
-  const [sent, setSent] = useState<Message[] | null>(null);
-  const [value, setValue] = useState(0);
+  const [incoming, setIncoming] = React.useState<Message[] | null>(null);
+  const [sent, setSent] = React.useState<Message[] | null>(null);
+  const [value, setValue] = React.useState(0);
 
-  useEffect(() => {
+  React.useEffect(() => {
     Promise.all([getMessages('incoming', user.id), getMessages('sent', user.id)])
       .then(([inc, st]) => {
         setIncoming(inc);

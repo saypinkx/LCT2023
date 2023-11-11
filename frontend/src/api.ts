@@ -61,6 +61,15 @@ export async function deleteMaterial(id: number): Promise<any> {
   }
 }
 
+export async function getIsIdeal(profile_id: number, jt_id: number): Promise<any> {
+  try {
+    const { data } = await api.get(`/profiles/is_ideal/${profile_id}?jt_id=${jt_id}`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
 export async function getMaterials(): Promise<Omit<Material, 'folder_name'>[]> {
   try {
     const { data } = await api.get('/materials');
@@ -79,9 +88,72 @@ export async function getMessages(type: string, user_id: number): Promise<Messag
   }
 }
 
+export async function getPlan(profile_id: number, jt_id: number): Promise<any[]> {
+  try {
+    const { data } = await api.get(`/profiles/plan/${profile_id}/${jt_id}?limit=1`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getPosition(jt_id: number): Promise<any[]> {
+  try {
+    const { data } = await api.get(`/profiles/position/${jt_id}`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getProfile(user_id: number): Promise<any> {
+  try {
+    const { data } = await api.get(`/profiles/${user_id}`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getProfiles(): Promise<any> {
+  try {
+    const { data } = await api.get('/profiles');
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getRating(profile_id: number, jt_id: number): Promise<any> {
+  try {
+    const { data } = await api.get(`/profiles/likeness/${profile_id}?jt_id=${jt_id}`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getTraits(profile_id: number): Promise<any> {
+  try {
+    const { data } = await api.get(`/profiles/${profile_id}/traits`);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
 export async function postMaterial(body: unknown): Promise<any> {
   try {
     const { data } = await api.post('/materials', body);
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function postTraits(profile_id: number): Promise<any> {
+  try {
+    const { data } = await api.post(`/profiles/${profile_id}/traits`);
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);

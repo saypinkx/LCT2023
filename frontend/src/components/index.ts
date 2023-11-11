@@ -8,3 +8,4 @@ export * from './main/main';
 export * from './material-edit/material-edit';
 export * from './materials/materials';
 export * from './messages/messages';
+export * from './user-main/user-main';

@@ -8,23 +8,18 @@ import './login.less';
 export const Login = (): React.ReactElement => {
   const { error, onLogin } = useAuth();
   const { errors, handleBlur, handleChange, handleSubmit, isValid, touched, values } = useFormik({
-    initialValues: {
-      username: '',
-      password: '',
-    },
+    initialValues: { username: '', password: '' },
     validationSchema: object({
       username: string().required('Введите логин'),
       password: string().required('Введите пароль'),
     }),
-    onSubmit: (credentials) => onLogin(credentials),
+    onSubmit: onLogin,
   });
 
   return (
     <Box className="login">
-      <Paper className="login__container" elevation={10}>
-        <Typography component="h1" variant="h5">
-          Войти
-        </Typography>
+      <Paper className="login-container" elevation={10}>
+        <Typography component="h1" variant="h5">Войти</Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
             autoComplete="username"
@@ -55,9 +50,7 @@ export const Login = (): React.ReactElement => {
             value={values.password}
             variant="outlined"
           />
-          <Button disabled={!isValid} type="submit" variant="contained">
-            Войти
-          </Button>
+          <Button disabled={!isValid} type="submit" variant="contained">Войти</Button>
         </Box>
         {error && (
           <Box sx={{ minWidth: 150, pt: 3 }}>
