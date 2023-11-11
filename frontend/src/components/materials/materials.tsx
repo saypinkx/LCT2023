@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Delete, Edit } from '@mui/icons-material';
 import { Button, ButtonGroup, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { deleteMaterial, getFolders, getMaterials } from '@src/api';
-import { MaterialEdit } from "@src/components";
+import { MaterialEdit } from '@src/components';
+import { useAuth } from '@src/hooks';
 import { Folder, Material } from '@src/models';
 import { gridProperties } from '@src/utils';
 import './materials.less';
 
 export const Materials = (): React.ReactElement => {
+  const { user } = useAuth();
   const [item, setItem] = useState<Material | null | undefined>();
   const [folders, setFolders] = useState<Folder[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
+  const isHr = useMemo(() => user.role === 'hr', [user]);
 
   const onDelete = (id: number): void => {
     deleteMaterial(id)
@@ -45,7 +48,13 @@ export const Materials = (): React.ReactElement => {
 
   return (
     <Grid container item { ...gridProperties }>
-      <Button color="secondary" style={{ marginBottom: '8px' }} onClick={() => setItem(null)}>Добавить материал</Button>
+      {
+        isHr && (
+          <Button color="secondary" style={{ marginBottom: '8px' }} onClick={() => setItem(null)}>
+            Добавить материал
+          </Button>
+        )
+      }
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -53,7 +62,7 @@ export const Materials = (): React.ReactElement => {
               <TableCell>Наименование</TableCell>
               <TableCell>Директория</TableCell>
               <TableCell>Ссылка</TableCell>
-              <TableCell align="center">Действия</TableCell>
+              {isHr && <TableCell align="center">Действия</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -70,12 +79,16 @@ export const Materials = (): React.ReactElement => {
                     ) : '-'
                   }
                 </TableCell>
-                <TableCell align="center">
-                  <ButtonGroup variant="text" aria-label="text button group">
-                    <Button startIcon={<Edit />} onClick={() => setItem(row)} />
-                    <Button color="error" startIcon={<Delete />} onClick={() => onDelete(row.id)} />
-                  </ButtonGroup>
-                </TableCell>
+                {
+                  isHr && (
+                    <TableCell align="center">
+                      <ButtonGroup variant="text" aria-label="text button group">
+                        <Button startIcon={<Edit />} onClick={() => setItem(row)} />
+                        <Button color="error" startIcon={<Delete />} onClick={() => onDelete(row.id)} />
+                      </ButtonGroup>
+                    </TableCell>
+                  )
+                }
               </TableRow>
             ))}
           </TableBody>
