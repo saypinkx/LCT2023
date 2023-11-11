@@ -66,6 +66,20 @@ class Message(Base):
         messages_db = db.scalars(smtp).all()
         return messages_db
 
+    @staticmethod
+    def get_incoming_messages(user_id):
+        db = db_session()
+        smtp = select(Message).where(Message.to_id == user_id)
+        messages_db = db.scalars(smtp).all()
+        return messages_db
+    @staticmethod
+    def get_sent_messages(user_id):
+        db = db_session()
+        smtp = select(Message).where(Message.from_id==user_id)
+        messages_db = db.scalars(smtp).all()
+        return messages_db
+
+
 #
 # message = db_session().query(Message).get(1)
 # print(message.sender)

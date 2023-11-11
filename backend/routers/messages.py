@@ -55,6 +55,20 @@ def get_message(message_id: Annotated[int, Path()]):
         raise HTTPException(status_code=404, detail='Message with id not found')
     return message_db
 
+@router.get('/incoming/{user_id}')
+def get_incoming_messages(user_id: Annotated[int, Path()]):
+    if not User.is_have(user_id):
+        raise HTTPException(status_code=404, detail='User with id not found')
+    messages_db = Message.get_incoming_messages(user_id)
+    return messages_db
+
+
+@router.get('/sent/{user_id}')
+def get_sent_messages(user_id: Annotated[int, Path()]):
+    if not User.is_have(user_id):
+        raise HTTPException(status_code=404, detail='User with id not found')
+    messages_db = Message.get_sent_messages(user_id)
+    return messages_db
 @router.get('/{user1_id}/{user2_id}')
 def get_dialog(user1_id: Annotated[int, Path()], user2_id: Annotated[int, Path()]):
     if not User.is_have(user1_id):
@@ -63,3 +77,6 @@ def get_dialog(user1_id: Annotated[int, Path()], user2_id: Annotated[int, Path()
         raise HTTPException(status_code=404, detail='User with user2_id not found')
     dialog_db = Message.get_dialog(user1_id, user2_id)
     return dialog_db
+
+
+
