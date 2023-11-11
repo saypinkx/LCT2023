@@ -10,6 +10,8 @@ from datetime import datetime
 from model.jobtitles import JobTitles
 from model.trait import Trait
 from model.up_trait import up_trait
+from sqlalchemy import text
+from sqlalchemy import text
 
 
 class UserProfile(Base):
@@ -76,10 +78,11 @@ class UserProfile(Base):
         smtp = select(UserProfile.id).where(UserProfile.id == profile_id)
         profile_db = db.scalar(smtp)
         return profile_db
+
     @staticmethod
     def get_record_upid(profile_id):
         db = db_session()
-        smtp = select(UserProfile).where(UserProfile.id==profile_id)
+        smtp = select(UserProfile).where(UserProfile.id == profile_id)
         profile_db = db.scalar(smtp)
         return profile_db
 
@@ -91,10 +94,50 @@ class UserProfile(Base):
             user_profile.traits.append(trait_db)
         db.add(user_profile)
         db.commit()
-    # @staticmethod
-    # def get_rating( jt_id):
-    #     what = select()
-    #
+
+    @staticmethod
+    def get_static(jt_id):
+        db = db_session()
+        smtp = text(
+            f"SELECT t.trait_name, count(*) as weight, (select t2.group_name from lc_traits t2 where t2.trait_name = t.trait_name limit 1) as what FROM lc_traits t, lc_up_traits upt, lc_user_profiles up WHERE t.id = upt.trait_ID and up.id = upt.up_id and up.is_primer = 1 and up.jt_id = {jt_id} group by 1 order by 3, 2 desc")
+        rows = db.execute(smtp)
+        result = []
+        for row in rows:
+            result.append([row[0], row[1], row[2]])
+        return result
+
+    @staticmethod
+    def get_rating(profile_id, jt_id):
+        db = db_session()
+        smtp = text(
+            f"select sum(w) FROM (SELECT r1.trait_id, (SELECT count(*) as weight FROM  lc_traits t, lc_up_traits upt, lc_user_profiles up WHERE t.id = upt.trait_ID and up.id = upt.up_id and up.is_primer = 1 and up.jt_id = {jt_id} and t.id = r1.trait_id) as w FROM lc_up_traits r1  where r1.up_id = {profile_id}) as yt")
+        rows = db.execute(smtp)
+        result = []
+        for row in rows:
+            result.append(row[0])
+
+        return result[0]
+
+    @staticmethod
+    def get_is_ideal(profile_id, jt_id):
+        db = db_session()
+        smtp = text(
+            f"SELECT  (SELECT count(*) FROM lc_up_traits t1, lc_up_traits t2 where t1.trait_id = t2.trait_id and t1.up_id = up1.id and t2.up_id = {profile_id}) as bliz, up1.lastname FROM lc_user_profiles up1 where up1.jt_id = {jt_id} and up1.is_primer = 1 group by up1.lastname")
+        rows = db.execute(smtp)
+        result = []
+        for row in rows:
+            result.append([row[0], row[1]])
+        return result
+
+    @staticmethod
+    def get_plan(profile_id, jt_id, porog):
+        db = db_session()
+        smtp = text(f"SELECT t.id, t.trait_name cx FROM lc_traits t, lc_up_traits upt, lc_user_profiles up WHERE t.id = upt.trait_ID and up.id = upt.up_id and up.is_primer = 1 and up.jt_id = {jt_id}  and t.group_code = 3 group by 1 having count(*)>{porog} and t.id not in (select tx.id from lc_traits tx, lc_up_traits t1 where t1.trait_id = tx.id and t1.up_id = {profile_id})")
+        rows = db.execute(smtp)
+        result = []
+        for row in rows:
+            result.append([row[0], row[1]])
+        return result
 
 #
 #

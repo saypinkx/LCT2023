@@ -7,6 +7,7 @@ from api.dblink import db_session
 from sqlalchemy import select, and_, or_
 from sqlalchemy.orm import joinedload
 from datetime import datetime
+from model.up_trait import up_trait
 
 
 class Trait(Base):
@@ -16,6 +17,7 @@ class Trait(Base):
     trait_name = Column(String, nullable=False)
     trait_text = Column(String, nullable=False)
     group_code = Column(Integer, nullable=False)
+    users = relationship('UserProfile', uselist=True, secondary=up_trait)
 
     @staticmethod
     def get_type_record():
@@ -37,3 +39,7 @@ class Trait(Base):
         smtp = select(Trait.id).where(Trait.id == trait_id)
         trait_db = db.scalar(smtp)
         return trait_db
+
+    # @staticmethod
+    # def get_statistic(jt_id):
+    #     smtp = select(Trait.name).where

@@ -1,5 +1,5 @@
 from model.user_profile import UserProfile
-from fastapi import APIRouter, Body, Path, HTTPException
+from fastapi import APIRouter, Body, Path, HTTPException, Query
 from typing import Annotated
 from model.up_trait import up_trait
 from api.dblink import db_session
@@ -42,6 +42,33 @@ def add_trait(profile_id: Annotated[int, Path()], traits_id: Annotated[list[int]
     UserProfile.add_traits(user_profile, traits_id)
     return traits_id
 
-# @router.get('/rating/{profile_id}/{jt_id}')
-# def get_rating(profile_id: Annotated[int, Path()], jt_id: Annotated[int, Path()]):
-#
+
+@router.get('/position/{jt_id}')
+def get_position(jt_id: Annotated[int, Path()]):
+    records = UserProfile.get_static(jt_id)
+    return records
+
+
+@router.get('/likeness/{profile_id}')
+def get_rating(profile_id: Annotated[int, Path()], jt_id: Annotated[int, Query()]):
+    if not UserProfile.is_have(profile_id):
+        raise HTTPException(detail='Profile with id not found', status_code=404)
+    summa = UserProfile.get_rating(profile_id, jt_id)
+    return summa
+
+
+@router.get('/is_ideal/{profile_id}')
+def get_is_ideal(profile_id: Annotated[int, Path()], jt_id: Annotated[int, Query()]):
+    if not UserProfile.is_have(profile_id):
+        raise HTTPException(status_code=404, detail='Profile with id not found')
+    res = UserProfile.get_is_ideal(profile_id, jt_id)
+    return res
+
+
+@router.get('/plan/{profile_id}/{jt_id}')
+def get_plan(profile_id: Annotated[int, Path()], jt_id: Annotated[int, Path()], limit: Annotated[int, Query()]):
+    if not UserProfile.is_have(profile_id):
+        raise HTTPException(status_code=404, detail='Profile with id not found')
+    res = UserProfile.get_plan(profile_id, jt_id, limit)
+
+    return res
