@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Credentials, Folder, Material, UserInfo } from '@src/models';
+import { Credentials, Folder, Material, Message, UserInfo } from '@src/models';
 
 type ApiError = { error: boolean; message: string; };
 
@@ -64,6 +64,15 @@ export async function deleteMaterial(id: number): Promise<any> {
 export async function getMaterials(): Promise<Omit<Material, 'folder_name'>[]> {
   try {
     const { data } = await api.get('/materials');
+    return data;
+  } catch (e) {
+    throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
+  }
+}
+
+export async function getMessages(type: string, user_id: number): Promise<Message[]> {
+  try {
+    const { data } = await api.get(`/messages/${type}/${user_id}`);
     return data;
   } catch (e) {
     throw new Error((e as AxiosError<ApiError>)?.response?.data?.message);
