@@ -16,10 +16,14 @@ def get_profile(user_id: Annotated[int, Path()]):
     return profile_db
 
 
+
 @router.get('/')
 def get_all_profiles():
     db_profiles = UserProfile.get_all_profiles_join_jobtitles()
     return db_profiles
+
+# @router.post('/')
+# def create_profile(profile: Annotated[])
 
 
 @router.get('/{profile_id}/traits')

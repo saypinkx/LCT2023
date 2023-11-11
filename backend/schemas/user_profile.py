@@ -1,0 +1,12 @@
+# __tablename__ = 'lc_user_profiles'
+# id = Column(Integer, primary_key=True)
+# user_id = Column(Integer, ForeignKey('lc_users.id'))
+# jt_id = Column(Integer, ForeignKey('lc_jobtitles.id'))
+# firstname = Column(String, nullable=False)
+# secondname = Column(String, nullable=False)
+# lastname = Column(String, nullable=False)
+# remark = Column(String, nullable=False)
+# is_primer = Column(Integer)
+# user = relationship('User', uselist=False, foreign_keys=user_id)
+# jt = relationship('JobTitles', uselist=False, foreign_keys=jt_id)
+# traits = relationship('Trait', uselist=True, secondary=up_trait)
