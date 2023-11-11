@@ -18,6 +18,18 @@ export interface Material {
   name: string;
 }
 
+export interface Message {
+  id: number;
+  date: string;
+  topic: string;
+  is_completed: number;
+  from_id: number;
+  to_id: number;
+  after_id: number;
+  body: string;
+  is_read: number;
+}
+
 export interface UserInfo {
   email: string;
   id: number;

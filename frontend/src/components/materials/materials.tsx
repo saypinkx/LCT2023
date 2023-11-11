@@ -6,7 +6,6 @@ import { MaterialEdit } from '@src/components';
 import { useAuth } from '@src/hooks';
 import { Folder, Material } from '@src/models';
 import { gridProperties } from '@src/utils';
-import './materials.less';
 
 export const Materials = (): React.ReactElement => {
   const { user } = useAuth();
@@ -47,7 +46,7 @@ export const Materials = (): React.ReactElement => {
   }, []);
 
   return (
-    <Grid container item { ...gridProperties }>
+    <Grid container item { ...gridProperties } md={10}>
       {
         isHr && (
           <Button color="secondary" style={{ marginBottom: '8px' }} onClick={() => setItem(null)}>

@@ -1,5 +1,6 @@
 export * from './app';
 export * from './container/container';
+export * from './employees/employees';
 export * from './file-uploader/file-uploader';
 export * from './header/header';
 export * from './login/login';
@@ -7,4 +8,3 @@ export * from './main/main';
 export * from './material-edit/material-edit';
 export * from './materials/materials';
 export * from './messages/messages';
-export * from './profile/profile';
