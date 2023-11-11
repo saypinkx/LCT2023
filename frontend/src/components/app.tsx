@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Container, Login, Main, Materials, Messages, Profile } from '@src/components';
+import { Container, Employees, Login, Main, Materials, Messages } from '@src/components';
 import { useAuth } from '@src/hooks';
 
 export const App = (): React.ReactElement => {
@@ -9,9 +9,9 @@ export const App = (): React.ReactElement => {
     <Routes>
       <Route element={user.id > -1 ? <Container /> : <Navigate to='/login' replace /> }>
         <Route path='/main' element={<Main />} />
-        <Route path='/materials' element={<Materials />} />
+        <Route path='/employees' element={user.role === 'hr' ? <Employees /> : <Navigate to='/main' replace />} />
+        <Route path='/materials' element={user.role === 'boss' ? <Navigate to='/main' replace /> : <Materials />} />
         <Route path='/messages' element={<Messages />} />
-        <Route path='/profile' element={<Profile />} />
       </Route>
       <Route path='/login' element={user.id > -1 ? <Navigate to='/main' replace /> : <Login />} />
       <Route path='*' element={<Navigate to={user.id > -1 ? '/main' : '/login'} replace />} />

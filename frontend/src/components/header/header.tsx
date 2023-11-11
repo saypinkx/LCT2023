@@ -17,8 +17,8 @@ export const Header = (): React.ReactElement => {
   return (
     <header className="app-header">
       <Button onClick={() => handleClick('/main')}>Главная</Button>
-      <Button onClick={() => handleClick('/profile')}>Профиль</Button>
-      <Button onClick={() => handleClick('/materials')}>Материалы</Button>
+      {user.role === 'hr' && <Button onClick={() => handleClick('/employees')}>Сотрудники</Button>}
+      {user.role !== 'boss' && <Button onClick={() => handleClick('/materials')}>Материалы</Button>}
       <Button onClick={() => handleClick('/messages')}>Сообщения</Button>
       <Typography variant="body1" component="div" sx={{ flexGrow: 1, textAlign: 'right' }}>
         {user.username}

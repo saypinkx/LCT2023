@@ -4,7 +4,6 @@ import { getMessages } from '@src/api';
 import { useAuth } from '@src/hooks';
 import { Message } from '@src/models';
 import { gridProperties } from '@src/utils';
-import './messages.less';
 
 export const Messages = (): React.ReactElement => {
   const { user } = useAuth();
