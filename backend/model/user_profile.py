@@ -21,6 +21,7 @@ class UserProfile(Base):
     secondname = Column(String, nullable=False)
     lastname = Column(String, nullable=False)
     remark = Column(String, nullable=False)
+    is_primer = Column(Integer)
     user = relationship('User', uselist=False, foreign_keys=user_id)
     jt = relationship('JobTitles', uselist=False, foreign_keys=jt_id)
     traits = relationship('Trait', uselist=True, secondary=up_trait)
@@ -82,6 +83,18 @@ class UserProfile(Base):
         profile_db = db.scalar(smtp)
         return profile_db
 
+    @staticmethod
+    def add_traits(user_profile, traits_id):
+        db = db_session()
+        for trait_id in traits_id:
+            trait_db = Trait.get_record(trait_id)
+            user_profile.traits.append(trait_db)
+        db.add(user_profile)
+        db.commit()
+    # @staticmethod
+    # def get_rating( jt_id):
+    #     what = select()
+    #
 
 #
 #

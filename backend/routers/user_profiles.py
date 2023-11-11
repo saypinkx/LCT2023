@@ -39,8 +39,9 @@ def add_trait(profile_id: Annotated[int, Path()], traits_id: Annotated[list[int]
     for trait_id in traits_id:
         if not Trait.is_have(trait_id):
             raise HTTPException(detail='Trait with id not found', status_code=404)
-
-    for trait_id in traits_id:
-        trait_db = Trait.get_record(trait_id)
-        user_profile.traits.append(trait_db)
+    UserProfile.add_traits(user_profile, traits_id)
     return traits_id
+
+# @router.get('/rating/{profile_id}/{jt_id}')
+# def get_rating(profile_id: Annotated[int, Path()], jt_id: Annotated[int, Path()]):
+#
